@@ -16,15 +16,22 @@
            (route/resources "/")
            (route/not-found "<p>Page not found.</p>"))
 
+(defn- get-port
+  []
+  (Integer. (or (System/getenv "PORT") "8080")))
+
 (defn stop-server!
   []
   (when-not (nil? @server)
-    (@server :timeout 100)
+    (do
+      (println "stopping server")
+      (@server :timeout 100))
     (reset! server nil)))
 
 (defn start-server!
   []
-  (reset! server (httpkit/run-server (handler/site #'routes) {:port 8080})))
+  (reset! server (httpkit/run-server (handler/site #'routes) {:port (get-port)}))
+  (println "server started on port" (get-port)))
 
 (defn- handle-request
   [url]

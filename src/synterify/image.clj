@@ -64,8 +64,9 @@
 (defn combinate
   [image-url-str]
   (println "combining" image-url-str)
-  (let [image-url (URL. image-url-str)
-        overlay (ImageIO/read overlay-url)
-        image (ImageIO/read image-url)
-        output-image-size (get-output-size overlay image)]
-    (combine-images image overlay output-image-size)))
+  (time
+    (let [image-url (URL. image-url-str)
+          overlay (ImageIO/read overlay-url)
+          image (ImageIO/read image-url)
+          output-image-size (get-output-size overlay image)]
+      (combine-images image overlay output-image-size))))

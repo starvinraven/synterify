@@ -3,5 +3,4 @@
 
 (defn -main
   []
-  (web/start-server!)
-  (println "server running"))
+  (web/start-server!))

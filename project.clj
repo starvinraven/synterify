@@ -7,14 +7,10 @@
                            [http-kit "2.1.16"]
                            [compojure "1.1.9"]
                            [javax.servlet/servlet-api "2.5"]]
-            :plugins [[org.clojars.shishkin/lein-lesscss "1.3.3"]
-                      [lein-coffeescript "0.1.1"]
-                      [lein-npm "0.4.0"]]
+            :plugins [[org.clojars.shishkin/lein-lesscss "1.3.3"]]
             :lesscss-paths ["resources/less"]
             :lesscss-output-path "resources/public/css"
             :node-dependencies [[coffee-script "1.8.0"]]
-            :coffeescript {:sources "coffee-src/*.coffee"
-                           :output "resources/public/js"}
-            :hooks [lein-coffeescript.plugin]
             :main synterify.core
+            :min-lein-version "2.0.0"
             :profiles {:uberjar {:aot :all}})
