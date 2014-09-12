@@ -29,15 +29,20 @@
                                 (:y overlay-size))
         image-scale-factor (/ output-height
                               (:y image-size))
-        output-width (Math/min
+        output-width (Math/max
                        (int (* overlay-scale-factor
                                (:x overlay-size)))
                        (int (* image-scale-factor
-                               (:x image-size))))]
+                               (:x image-size))))
+        overlay-scaled-size (map-values (partial * overlay-scale-factor) overlay-size)
+        image-scaled-size (map-values (partial * image-scale-factor) image-size)
+        ]
     {:x                   output-width
      :y                   output-height
-     :overlay-scaled-size (map-values (partial * overlay-scale-factor) overlay-size)
-     :image-scaled-size   (map-values (partial * image-scale-factor) image-size)}))
+     :overlay-pos-x       (- output-width (:x overlay-scaled-size))
+     :overlay-pos-y       0
+     :overlay-scaled-size overlay-scaled-size
+     :image-scaled-size   image-scaled-size}))
 
 (defn- combine-images
   [image overlay output-image-size]
@@ -53,7 +58,7 @@
                 (get-in output-image-size [:image-scaled-size :y])
                 nil)
     (.drawImage output-graphics
-                overlay 0 0
+                overlay (:overlay-pos-x output-image-size) (:overlay-pos-y output-image-size)
                 (get-in output-image-size [:overlay-scaled-size :x])
                 (get-in output-image-size [:overlay-scaled-size :y])
                 nil)
