@@ -1,6 +1,6 @@
 # synterify
 
-A Clojure library designed to ... well, that part is up to you.
+vitu awesome
 
 ## Usage
 
