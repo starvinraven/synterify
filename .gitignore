@@ -10,3 +10,4 @@ pom.xml.asc
 /.idea
 /node_modules
 *.iml
+.env

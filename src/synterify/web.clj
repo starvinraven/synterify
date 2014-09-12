@@ -4,7 +4,8 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [ring.util.response :as resp]
-            [synterify.image :as image]))
+            [synterify.image :as image]
+            [synterify.s3 :as s3]))
 
 (declare handle-request)
 
@@ -33,9 +34,24 @@
   (reset! server (httpkit/run-server (handler/site #'routes) {:port (get-port)}))
   (println "server started on port" (get-port)))
 
+(defn image-response
+  [body]
+  {:status 200
+   :headers {"Content-Type" "image/jpeg"}
+   :body body})
+
+(defn- cache-and-return
+  [url]
+  (println "cache-and-return" url)
+  (let [file (image/combinate url)]
+    (s3/put-image url file)
+    file))
+
 (defn- handle-request
   [url]
   (when url
-    {:status  200
-     :headers {"Content-Type" "image/jpeg"}
-     :body    (image/combinate url)}))
+    (if (s3/image-exists? url)
+      (do
+        (println "using cached image" url)
+        (image-response (s3/get-image url)))
+      (image-response (cache-and-return url)))))
