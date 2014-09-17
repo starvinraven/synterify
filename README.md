@@ -4,7 +4,9 @@ vitu awesome
 
 ## Usage
 
-FIXME
+* Install Leiningen: http://leiningen.org/
+* `lein run`
+* To store generated images in S3, add env variables S3_KEY and S3_SECRET
 
 ## License
 
