@@ -2,11 +2,17 @@
   (:require [aws.sdk.s3 :as s3]
             [digest :as digest]))
 
-(defonce cred {:access-key (System/getenv "S3_KEY"), :secret-key (System/getenv "S3_SECRET")})
+(def cred {:access-key (System/getenv "S3_KEY")
+           :secret-key (System/getenv "S3_SECRET")})
 
-(defonce bucket "synterify-images")
+(def bucket "synterify-images")
 
-(s3/create-bucket cred bucket)
+(def have-creds? (and
+                   (:access-key cred)
+                   (:secret-key cred)))
+
+(when have-creds?
+  (s3/create-bucket cred bucket))
 
 (defn- get-key-by-url
   [url]
@@ -14,16 +20,20 @@
 
 (defn put-image
   [url file]
-  (let [key (get-key-by-url url)]
-    (s3/put-object cred bucket key file)
-    (s3/update-object-acl cred bucket key (s3/grant :all-users :read))))
+  (when have-creds?
+    (let [key (get-key-by-url url)]
+      (s3/put-object cred bucket key file)
+      (s3/update-object-acl cred bucket key (s3/grant :all-users :read)))))
 
 (defn image-exists?
   [url]
-  (s3/object-exists? cred bucket (get-key-by-url url)))
+  (if have-creds?
+    (s3/object-exists? cred bucket (get-key-by-url url))
+    false))
 
 (defn get-image
   [url]
-  (:content
-   (s3/get-object cred bucket (get-key-by-url url))))
+  (when have-creds?
+    (:content
+     (s3/get-object cred bucket (get-key-by-url url)))))
 
