@@ -7,7 +7,8 @@
     (java.io ByteArrayOutputStream File)
     (java.net URL)))
 
-(def overlay-url (io/resource "synterionkalja.png"))
+;(def overlay-url (io/resource "synterionkalja.png"))
+(def overlay-url (io/resource "batmantero.png"))
 
 (defn- get-image-size
   [buffered-image]
