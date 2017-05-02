@@ -20,7 +20,7 @@
                        (ring-json/wrap-json-response))
                      (compojure/GET "/batmanterify" [:as {params :params}] (handle-request (:url params) :batmanterify))
                      (compojure/GET "/doit" [:as {params :params}] (handle-request (:url params) :synterify))
-                     (compojure/GET "/get" [:as {params :params}] (handle-request (:url params) (keyword (:overlay-name params))))
+                     (compojure/GET "/get/:overlay-name" [overlay-name :as {params :params}] (handle-request (:url params) (keyword overlay-name)))
                      (compojure/GET "/" [] (resp/resource-response "index.html" {:root "public"}))
                      (route/resources "/")
                      (route/not-found "<p>Page not found.</p>"))

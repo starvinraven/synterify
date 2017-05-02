@@ -7,8 +7,8 @@
     (java.io ByteArrayOutputStream File)
     (java.net URL)))
 
-(def overlays {:synterify (io/resource "synterionkalja.png")
-               :batmanterify (def overlay-url (io/resource "batmantero.png"))})
+(def overlays {:synterify    (io/resource "synterionkalja.png")
+               :batmanterify (io/resource "batmantero.png")})
 
 (defn- get-image-size
   [buffered-image]
@@ -36,8 +36,7 @@
                        (int (* image-scale-factor
                                (:x image-size))))
         overlay-scaled-size (map-values (partial * overlay-scale-factor) overlay-size)
-        image-scaled-size (map-values (partial * image-scale-factor) image-size)
-        ]
+        image-scaled-size (map-values (partial * image-scale-factor) image-size)]
     {:x                   output-width
      :y                   output-height
      :overlay-pos-x       (- output-width (:x overlay-scaled-size))
