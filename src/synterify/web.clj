@@ -12,7 +12,8 @@
 (defonce server (atom nil))
 
 (compojure/defroutes routes
-           (compojure/GET "/doit" [:as {params :params}] (handle-request (:url params)))
+           (compojure/GET "/batmanterify" [:as {params :params}] (handle-request (:url params) :batmanterify))
+           (compojure/GET "/doit" [:as {params :params}] (handle-request (:url params) :synterify))
            (compojure/GET "/" [] (resp/resource-response "index.html" {:root "public"}))
            (route/resources "/")
            (route/not-found "<p>Page not found.</p>"))
@@ -41,17 +42,17 @@
    :body body})
 
 (defn- cache-and-return
-  [url]
+  [url overlay-name]
   (println "cache-and-return" url)
-  (let [file (image/combinate url)]
-    (s3/put-image url file)
+  (let [file (image/combinate url overlay-name)]
+    (s3/put-image url file overlay-name)
     file))
 
 (defn- handle-request
-  [url]
+  [url overlay-name]
   (when url
-    (if (s3/image-exists? url)
+    (if (s3/image-exists? url overlay-name)
       (do
         (println "using cached image" url)
-        (image-response (s3/get-image url)))
-      (image-response (cache-and-return url)))))
+        (image-response (s3/get-image url overlay-name)))
+      (image-response (cache-and-return url overlay-name)))))

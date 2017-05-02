@@ -7,8 +7,8 @@
     (java.io ByteArrayOutputStream File)
     (java.net URL)))
 
-;(def overlay-url (io/resource "synterionkalja.png"))
-(def overlay-url (io/resource "batmantero.png"))
+(def overlays {:synterify (io/resource "synterionkalja.png")
+               :batmanterify (def overlay-url (io/resource "batmantero.png"))})
 
 (defn- get-image-size
   [buffered-image]
@@ -68,11 +68,11 @@
     output-file))
 
 (defn combinate
-  [image-url-str]
-  (println "combining" image-url-str)
+  [image-url-str overlay-name]
+  (println "combining" image-url-str overlay-name)
   (time
     (let [image-url (URL. image-url-str)
-          overlay (ImageIO/read overlay-url)
+          overlay (ImageIO/read (overlay-name overlays))
           image (ImageIO/read image-url)
           output-image-size (get-output-size overlay image)]
       (combine-images image overlay output-image-size))))

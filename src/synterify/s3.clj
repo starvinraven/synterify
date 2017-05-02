@@ -15,25 +15,25 @@
   (s3/create-bucket cred bucket))
 
 (defn- get-key-by-url
-  [url]
-  (digest/sha-256 url))
+  [url overlay-name]
+  (digest/sha-256 url overlay-name))
 
 (defn put-image
-  [url file]
+  [url file overlay-name]
   (when have-creds?
-    (let [key (get-key-by-url url)]
+    (let [key (get-key-by-url url overlay-name)]
       (s3/put-object cred bucket key file)
       (s3/update-object-acl cred bucket key (s3/grant :all-users :read)))))
 
 (defn image-exists?
-  [url]
+  [url overlay-name]
   (if have-creds?
-    (s3/object-exists? cred bucket (get-key-by-url url))
+    (s3/object-exists? cred bucket (get-key-by-url url overlay-name))
     false))
 
 (defn get-image
-  [url]
+  [url overlay-name]
   (when have-creds?
     (:content
-     (s3/get-object cred bucket (get-key-by-url url)))))
+     (s3/get-object cred bucket (get-key-by-url url overlay-name)))))
 
