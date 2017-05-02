@@ -16,7 +16,7 @@
 
 (defn- get-key-by-url
   [url overlay-name]
-  (digest/sha-256 url overlay-name))
+  (digest/sha-256 (str url "##" overlay-name)))
 
 (defn put-image
   [url file overlay-name]
@@ -35,5 +35,5 @@
   [url overlay-name]
   (when have-creds?
     (:content
-     (s3/get-object cred bucket (get-key-by-url url overlay-name)))))
+      (s3/get-object cred bucket (get-key-by-url url overlay-name)))))
 

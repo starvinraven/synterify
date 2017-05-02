@@ -67,7 +67,16 @@
     (ImageIO/write output-image "jpeg" output-file)
     output-file))
 
-(defn combinate
+(defn combinate-bytes
+  [image image-url-str overlay-name]
+  (println "combining bytes" image-url-str overlay-name)
+  (time
+    (let [overlay (ImageIO/read (overlay-name overlays))
+          image (ImageIO/read image)
+          output-image-size (get-output-size overlay image)]
+      (combine-images image overlay output-image-size))))
+
+(defn combinate-url
   [image-url-str overlay-name]
   (println "combining" image-url-str overlay-name)
   (time
